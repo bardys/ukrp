@@ -1,0 +1,12 @@
+.idea/
+*.iws
+*.iml
+/out/
+/target/
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+readme.txt
+creds.csv
+pom.xml
