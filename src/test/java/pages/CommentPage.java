@@ -1,11 +1,18 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.yandex.qatools.allure.annotations.Step;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class CommentPage extends AbstractPage{
 
@@ -32,8 +39,10 @@ public class CommentPage extends AbstractPage{
         driver.navigate().to(url);
     }
 
+    @Step("Enter login {0} and password {1}")
     public void login(String login, String password) throws InterruptedException {
-        Thread.sleep(2000);
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        wait.until(ExpectedConditions.elementToBeClickable(authLinkLoc));
         authLinkLoc.click();
 
         String winHandleBefore = driver.getWindowHandle();
@@ -50,9 +59,16 @@ public class CommentPage extends AbstractPage{
         driver.switchTo().window(winHandleBefore);
     }
 
+    @Step("Write comment {0}")
     public void writeComment(String commentText){
-        WebDriverWait wait = new WebDriverWait(driver, 2);
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                .withTimeout(5, SECONDS)
+                .pollingEvery(100, MILLISECONDS)
+                .ignoring(ElementNotVisibleException.class);
+
         wait.until(ExpectedConditions.elementToBeClickable(commentFieldLoc));
+
+
 
         commentFieldLoc.click();
         commentFieldLoc.sendKeys(commentText);

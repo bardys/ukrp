@@ -2,7 +2,7 @@ package pages;
 
 import org.openqa.selenium.WebDriver;
 
-public class AbstractPage {
+public abstract class AbstractPage {
 
     public WebDriver driver;
 
