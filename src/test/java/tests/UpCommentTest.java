@@ -19,6 +19,7 @@ public class UpCommentTest extends UpBaseTest {
         PageFactory.initElements(driver, commentPage);
         commentPage.login(login, password);
         commentPage.writeComment(commentText);
+        commentPage.assertCommentText(commentText);
 
     }
 

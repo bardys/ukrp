@@ -2,6 +2,9 @@ package tests;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -31,11 +34,30 @@ public class UpBaseTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
-    @After
-    public void tearDown(){
-        saveImageAttach("screenshot from " + BROWSER);
-        driver.quit();
+//    @After
+//    public void tearDown(){
+//        saveImageAttach("screenshot on failure");
+//        driver.quit();
+//    }
+
+
+
+    private static byte[] toByteArray(File file) throws IOException {
+        return Files.readAllBytes(Paths.get(file.getPath()));
     }
+
+    @Rule
+    public TestWatcher screenshotOnFail = new TestWatcher() {
+        @Override
+        protected void failed(Throwable e, Description description) {
+            saveImageAttach("screenshot on failure");
+        }
+
+        @Override
+        protected void finished(Description description) {
+            driver.quit();
+        }
+    };
 
     @Attachment(value="{0}", type="image/png")
     public byte[] saveImageAttach(String attachName){
@@ -47,7 +69,4 @@ public class UpBaseTest {
         return new byte[0];
     }
 
-    private static byte[] toByteArray(File file) throws IOException {
-        return Files.readAllBytes(Paths.get(file.getPath()));
-    }
 }
